@@ -1,3 +1,4 @@
 import { run } from "./main.js";
 
-run();
+await run();
+process.exit(0);
