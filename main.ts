@@ -1,26 +1,40 @@
-import * as core from '@actions/core'
-import * as http from '@actions/http-client'
+import * as core from "@actions/core";
+import * as http from "@actions/http-client";
+import { getReasonPhrase, StatusCodes } from "http-status-codes";
 
-const auth = core.getInput("auth");
-const endpoint = core.getInput("endpoint");
-const run_id = core.getInput("github_run_id");
-if (!URL.canParse(endpoint)) {
-    throw new Error('Invalid endpoint provided');
-}
-if (run_id == "") throw new Error('Invalid workflow run id provided');
-const httpClient = new http.HttpClient('kessoku-private-ci');
+// Parameters
+
+const dest = core.getInput("dest").trim();
+const auth = core.getInput("auth").trim();
+const endpoint = core.getInput("endpoint").trim();
+const run_id = core.getInput("github_run_id").trim();
+
+// Validations
+
+if (!URL.canParse(endpoint)) throw new Error("Invalid endpoint provided");
+if (run_id == "") throw new Error("Invalid workflow run id provided");
+
+// Actions
+
+const client = new http.HttpClient("kessoku-private-ci");
 const headers = {
-    'Authorization': `Basic ${auth}`,
-    'Content-Type': 'application/json',
-    'User-Agent': 'kessoku-private-ci'
+  Authorization: `Basic ${auth}`,
+  "Content-Type": "application/json",
+  "User-Agent": "kessoku-private-ci",
 };
-const body = JSON.stringify({ run_id });
-core.info(`Sending ${run_id}`);
-httpClient.post(endpoint, JSON.stringify({run_id: run_id}), headers).then(response => {
-    const statusCode = response.message.statusCode || 500;
-    if (statusCode == 200) {
-        core.info("Successfully post the API!");
-    } else {
-        core.setFailed(`Action failed! Response status: ${statusCode}`);
-    }
+const body = JSON.stringify({ run_id: run_id });
+
+core.info(`Posting with run id ${run_id}…`);
+client.post(endpoint, body, headers).then((response) => {
+  const statusCode: StatusCodes =
+    response.message.statusCode ?? StatusCodes.INTERNAL_SERVER_ERROR;
+  if (statusCode == StatusCodes.OK) {
+    core.info(`Successfully started website deployment at ${dest}`);
+  } else {
+    core.setFailed(
+      `Failed to deploy! Server responded with ${statusCode} ${getReasonPhrase(
+        statusCode
+      )}`
+    );
+  }
 });

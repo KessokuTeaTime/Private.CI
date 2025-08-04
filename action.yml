@@ -1,15 +1,19 @@
 name: Deploy Website
-description: Private Workflow
+description: Deploy website to the server
 
 inputs:
+  dest:
+    description: The destination path
+    required: false
+    default: "www"
   auth:
-    description: In Basic format
+    description: The API token in Basic format
     required: true
   endpoint:
     description: The API endpoint
     required: true
   github_run_id:
-    description: "The id of the workflow run where the desired download artifact was uploaded from."
+    description: The id of the workflow run where the desired artifact was uploaded
     required: true
 
 runs:
