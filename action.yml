@@ -1,0 +1,17 @@
+name: Deploy Website
+description: Private Workflow
+
+inputs:
+  auth:
+    description: In Basic format
+    required: true
+  endpoint:
+    description: The API endpoint
+    required: true
+  run-id:
+    description: The Current Run Id
+    required: true
+
+runs:
+  using: node20
+  main: dist/index.js
