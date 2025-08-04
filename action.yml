@@ -8,8 +8,8 @@ inputs:
   endpoint:
     description: The API endpoint
     required: true
-  run-id:
-    description: The Current Run Id
+  github_run_id:
+    description: "The id of the workflow run where the desired download artifact was uploaded from."
     required: true
 
 runs:

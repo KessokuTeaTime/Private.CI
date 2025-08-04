@@ -3,10 +3,11 @@ import * as http from '@actions/http-client'
 
 const auth = core.getInput("auth");
 const endpoint = core.getInput("endpoint");
-const run_id = core.getInput("run-id");
+const run_id = core.getInput("github_run_id");
 if (!URL.canParse(endpoint)) {
     throw new Error('Invalid endpoint provided');
 }
+if (run_id == "") throw new Error('Invalid workflow run id provided');
 const httpClient = new http.HttpClient('kessoku-private-ci');
 const headers = {
     'Authorization': `Basic ${auth}`,
