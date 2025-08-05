@@ -23,7 +23,10 @@ export async function run(): Promise<void> {
     "Content-Type": "application/json",
     "User-Agent": "kessoku-private-ci",
   };
-  const body = JSON.stringify({ run_id: run_id });
+  const body = JSON.stringify({
+    run_id: run_id,
+    dest: dest,
+  });
 
   core.info(`Posting with run id ${run_id}…`);
   return await client.post(endpoint, body, headers).then((response) => {
@@ -34,7 +37,7 @@ export async function run(): Promise<void> {
       core.info(`Successfully started website deployment at ${dest}`);
     } else {
       core.setFailed(
-        `Failed to deploy! Server responded with ${statusCode} ${getReasonPhrase(
+        `Failed to deploy website! Server responded with ${statusCode} ${getReasonPhrase(
           statusCode
         )}`
       );
