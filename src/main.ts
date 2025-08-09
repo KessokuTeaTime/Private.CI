@@ -5,15 +5,14 @@ import { getReasonPhrase, StatusCodes } from "http-status-codes";
 export async function run(): Promise<void> {
   // Parameters
 
-  const dest = core.getInput("dest").trim();
   const auth = core.getInput("auth").trim();
   const endpoint = core.getInput("endpoint").trim();
-  const run_id = core.getInput("github_run_id").trim();
+  const payload = core.getInput("payload").trim();
 
   // Validations
 
   if (!URL.canParse(endpoint)) throw new Error("Invalid endpoint provided");
-  if (run_id == "") throw new Error("Invalid workflow run id provided");
+  if (payload == "") throw new Error("Invalid JSON payload provided");
 
   // Actions
 
@@ -23,21 +22,18 @@ export async function run(): Promise<void> {
     "Content-Type": "application/json",
     "User-Agent": "kessoku-private-ci",
   };
-  const body = JSON.stringify({
-    run_id: run_id,
-    dest: dest,
-  });
+  const body = JSON.stringify(payload);
 
-  core.info(`Posting with run id ${run_id}…`);
+  core.info(`Posting a request to ${endpoint} with payload ${body}…`);
   return await client.post(endpoint, body, headers).then((response) => {
     const statusCode: StatusCodes =
       response.message.statusCode ?? StatusCodes.INTERNAL_SERVER_ERROR;
 
     if (statusCode == StatusCodes.OK) {
-      core.info(`Successfully started website deployment at ${dest}`);
+      core.info(`Successfully posted request to ${endpoint}`);
     } else {
       core.setFailed(
-        `Failed to deploy website! Server responded with ${statusCode} ${getReasonPhrase(
+        `Failed to post request to ${endpoint}! Server responded with ${statusCode} ${getReasonPhrase(
           statusCode
         )}`
       );
