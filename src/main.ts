@@ -39,4 +39,5 @@ export async function run(): Promise<void> {
       );
     }
   });
+  client.dispose();
 }
