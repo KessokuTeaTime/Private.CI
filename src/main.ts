@@ -28,7 +28,7 @@ export async function run(): Promise<void> {
   const body = JSON.stringify(payload);
 
   core.info(`Posting a request to ${endpoint} with payload ${body}…`);
-  await client.post(endpoint, body, headers).then((response) => {
+  await client.post(url.toString(), body, headers).then((response) => {
     const statusCode: StatusCodes =
       response.message.statusCode ?? StatusCodes.INTERNAL_SERVER_ERROR;
 
