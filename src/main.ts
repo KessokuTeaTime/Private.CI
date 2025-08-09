@@ -12,7 +12,7 @@ export async function run(): Promise<void> {
   // Validations
 
   let url = URL.parse(
-    `https://kessokuteatime.work/${endpoint.replace(/^\//, "")}`
+    `https://api.kessokuteatime.work/${endpoint.replace(/^\//, "")}`
   );
   if (!url) throw new Error(`Invalid endpoint provided: ${endpoint}`);
   if (!payload) throw new Error(`Invalid JSON payload provided: ${payload}`);
