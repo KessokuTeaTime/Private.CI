@@ -22,7 +22,7 @@ export async function run(): Promise<void> {
     "Content-Type": "application/json",
     "User-Agent": "kessoku-private-ci",
   };
-  const body = JSON.stringify(payload);
+  const body = JSON.parse(payload);
 
   core.info(`Posting a request to ${endpoint} with payload ${body}…`);
   return await client.post(endpoint, body, headers).then((response) => {
