@@ -7,12 +7,15 @@ export async function run(): Promise<void> {
 
   const auth = core.getInput("auth").trim();
   const endpoint = core.getInput("endpoint").trim();
-  const payload = core.getInput("payload").trim();
+  const payload = JSON.parse(core.getInput("payload").trim());
 
   // Validations
 
-  if (!URL.canParse(endpoint)) throw new Error("Invalid endpoint provided");
-  if (payload == "") throw new Error("Invalid JSON payload provided");
+  let url = URL.parse(
+    `https://kessokuteatime.work/${endpoint.replace(/^\//, "")}`
+  );
+  if (!url) throw new Error(`Invalid endpoint provided: ${endpoint}`);
+  if (!payload) throw new Error(`Invalid JSON payload provided: ${payload}`);
 
   // Actions
 
@@ -22,7 +25,7 @@ export async function run(): Promise<void> {
     "Content-Type": "application/json",
     "User-Agent": "kessoku-private-ci",
   };
-  const body = JSON.stringify(JSON.parse(payload));
+  const body = JSON.stringify(payload);
 
   core.info(`Posting a request to ${endpoint} with payload ${body}…`);
   await client.post(endpoint, body, headers).then((response) => {
