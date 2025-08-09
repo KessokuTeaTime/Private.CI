@@ -25,7 +25,7 @@ export async function run(): Promise<void> {
   const body = JSON.stringify(JSON.parse(payload));
 
   core.info(`Posting a request to ${endpoint} with payload ${body}…`);
-  return client.post(endpoint, body, headers).then((response) => {
+  await client.post(endpoint, body, headers).then((response) => {
     const statusCode: StatusCodes =
       response.message.statusCode ?? StatusCodes.INTERNAL_SERVER_ERROR;
 
@@ -38,7 +38,5 @@ export async function run(): Promise<void> {
         )}`
       );
     }
-
-    return;
   });
 }
