@@ -1,19 +1,15 @@
-name: Deploy Website
-description: Deploy website to the server
+name: Kessoku Private CI
+description: Post an authorized request to the server with `kessoku-private-ci`
 
 inputs:
-  dest:
-    description: The destination path
-    required: false
-    default: "www"
   auth:
     description: The API token in Basic format
     required: true
   endpoint:
     description: The API endpoint
     required: true
-  github_run_id:
-    description: The id of the workflow run where the desired artifact was uploaded
+  payload:
+    description: The payload of the request in JSON format
     required: true
 
 runs:
